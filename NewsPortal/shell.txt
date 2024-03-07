@@ -1,0 +1,57 @@
+from news.models import *
+user_1 = User.objects.create_user(username='Agniev')
+user_2 = User.objects.create_user(username='Atyakov')
+
+author_1 = Author.objects.create(user_link=user_1)
+author_2 = Author.objects.create(user_link=user_2)
+
+category_1 = Category.objects.create(name='finance')
+category_2 = Category.objects.create(name='sport')
+category_3 = Category.objects.create(name='science')
+category_4 = Category.objects.create(name='education')
+
+post_1 = Post.objects.create(type_post='AR', title='Etymology of science', text='The word science has been used in Middle English since the 14th century in the sense of the state of knowing. The word was borrowed from the Anglo-Norman language as the suffix -cience, which was borrowed from the Latin word scientia, meaning knowledge, awareness, understanding. It is a noun derivative of the Latin sciens meaning knowing, and undisputedly derived from the Latin sciō, the present participle scīre, meaning to know.', author=author_1)
+post_1.categories.add(cat_3, cat_4)
+post_2 = Post.objects.create(type_post='AR', title='Risk management', text='Risk management, in general, is the study of how to control risks and balance the possibility of gains; it is the process of measuring risk and then developing and implementing strategies to manage that risk. Financial risk management is the practice of protecting corporate value by using financial instruments to manage exposure to risk, here called "hedging"; the focus is particularly on credit and market risk, and in banks, through regulatory capital, includes operational risk.', author=author_1)
+post_2.categories.add(cat_1)
+post_3 = Post.objects.create(type_post='NE', title='Neymar set to seal world-record move to PSG', text='Neymar is set to complete a world-record move to Paris Saint-Germain worth around £450m in fees and wages after telling Barcelona he is leaving.', author=author_2)
+post_3.categories.add(cat_1, cat_2)
+com_1 = Comment.objects.create(text='The best player ever!', post=post_3, user=user_3)
+com_2 = Comment.objects.create(text='I agree', post=post_3, user=user_2)
+com_3 = Comment.objects.create(text='Tired of this football!', post=post_3, user=user_4)
+com_4 = Comment.objects.create(text='Wow', post=post_1, user=user_2)
+com_5 = Comment.objects.create(text="I was sure you'd like it", post=post_1, user=user_1)
+com_6 = Comment.objects.create(text='Useful info', post=post_2, user=user_4)
+post_1.like()
+post_1.like()
+post_2.like()
+post_2.dislike()
+post_3.like()
+post_3.like()
+post_3.like()
+post_3.like()
+post_3.dislike()
+com_1.like()
+com_1.like()
+com_1.dislike()
+com_2.like()
+com_3.dislike()
+com_3.dislike()
+com_5.like()
+com_6.like()
+com_6.like()
+com_6.like()
+com_6.like()
+author_1.update_rating()
+author_2.update_rating()
+authors = Author.objects.all().order_by('-rating_author')
+f'The best author - {authors[0].user_link.username} with a rating {authors[0].rating_author}'
+posts = Post.objects.all().order_by('-rating_post')
+f'INFO ABOUT THE BEST POST: Date - {posts[0].time_add}; Author - {posts[0].author.user_link.username}; Rating - {posts[0].rating_post}; Title - {posts[0].title}; Preview - {posts[0].preview()}'
+comments = Comment.objects.filter(post=posts[0])
+for i in comments:
+    print()
+    f'Date: {i.time_add}'
+    f'User: {i.user.username}'
+    f'Rating: {i.rating_comment}'
+    f'Text: {i.text}'
